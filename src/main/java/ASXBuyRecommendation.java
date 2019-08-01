@@ -4,40 +4,63 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 public class ASXBuyRecommendation {
-
+public static int stockcount;
     public static void main(String args[]) throws Exception
     {
-        System.setProperty("webdriver.chrome.driver","src/main/resources/chromedriver");
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("start-maximized");
-        // options.addArguments("headless");
-        WebDriver driver = new ChromeDriver(options);
-        driver.manage().window().maximize();
+        int pages_per_thread=2;
 
+        BuyRecommendationThread []b1=new BuyRecommendationThread[10];
 
+        for(int i=0;i<2;i++) {
+           b1[i] =new BuyRecommendationThread(i,(pages_per_thread*i)+1,pages_per_thread*(i+1));
 
-      //  Thread.sleep(5000);
-        driver.get("https://www.investing.com/stock-screener/?sp=country::25|sector::a|industry::a|equityType::a%3Ceq_market_cap;1");
-        Thread.sleep(5000);
-        int size= driver.findElements(By.xpath("//*[@data-column-name='name_trans']")).size();
-        System.out.println("Total stocks : "+size);
-        String stock_name, stock_url;
-
-       for(int k=1;k<43;k++) {
-           driver.get("https://www.investing.com/stock-screener/?sp=country::25|sector::a|industry::a|equityType::a%3Ceq_market_cap;"+k);
-           Thread.sleep(3000);
-            size= driver.findElements(By.xpath("//*[@data-column-name='name_trans']")).size();
-            for (int i = 2; i < size; i++) {
-                stock_name = driver.findElements(By.xpath("//*[@data-column-name='name_trans']")).get(i).findElement(By.tagName("a")).getText();
-                stock_url = driver.findElements(By.xpath("//*[@data-column-name='name_trans']")).get(i).findElement(By.tagName("a")).getAttribute("href");
-                System.out.println("Stock ::: " + stock_name + "  , URL :: " + stock_url);
-            }
 
         }
 
-        driver.quit();
+        Thread.sleep(5000);
 
+        WaitUntilThreadsDie();
+
+        System.out.println("Total Stocks Listed : "+stockcount);
+
+
+
+
+
+    }
+
+
+
+
+
+    private static void WaitUntilThreadsDie()
+    {
+        //wait until all threads are complete
+
+        Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
+        System.out.println("Alive Thread count : " + threadSet.size());
+        // Thread.getAllStackTraces().
+        boolean alive=true;
+        while(alive) {
+            alive=false;
+            Set<Thread> threads = Thread.getAllStackTraces().keySet();
+          //  System.out.println("*****Round*****");
+            for (Thread t : threads) {
+                String name = t.getName();
+             //   System.out.println("Thread name :"+name);
+                if(t.getName().startsWith("Thread"))
+                {
+                    alive=true;
+                    continue;
+
+                }
+
+            }
+        }
+
+        System.out.println("All threads DEAD !!!");
     }
 }
