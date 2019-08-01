@@ -3,16 +3,13 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
-public class BuyRecommendationThread extends ASXBuyRecommendation implements Runnable {
-    public static int start_count,end_count,thread_count;
-    public BuyRecommendationThread(int threadcount,int start, int end) {
-        this.start_count=start;
-        this.end_count=end;
-        this.thread_count=threadcount;
-        Thread t= new Thread();
-        t.start();
+import java.util.ArrayList;
+import java.util.Arrays;
 
-    }
+public class BuyRecommendationThread extends ASXBuyRecommendation implements Runnable {
+    private int start_count,end_count,thread_count;
+
+
 
     public void run() {
         try {
@@ -36,12 +33,17 @@ public class BuyRecommendationThread extends ASXBuyRecommendation implements Run
 
             for (int k = this.start_count; k <= this.end_count; k++) {
                 driver.get("https://www.investing.com/stock-screener/?sp=country::25|sector::a|industry::a|equityType::a%3Ceq_market_cap;" + k);
-                Thread.sleep(3000);
+                Thread.sleep(10000);
+
                int size = driver.findElements(By.xpath("//*[@data-column-name='name_trans']")).size();
                 for (int i = 2; i < size; i++) {
+
                     stock_name = driver.findElements(By.xpath("//*[@data-column-name='name_trans']")).get(i).findElement(By.tagName("a")).getText();
                     stock_url = driver.findElements(By.xpath("//*[@data-column-name='name_trans']")).get(i).findElement(By.tagName("a")).getAttribute("href");
                     System.out.println("Thread "+this.thread_count+" "+(count+1)+") Stock ::: " + stock_name + "  , URL :: " + stock_url);
+                   // BuyRecommendationThread.stock_details.add(0,stock_name);
+                   // BuyRecommendationThread.stock_details.add(1,stock_url);
+                    BuyRecommendationThread.stock_details.add(new ArrayList<>(Arrays.asList(stock_name, stock_url)));
                     count++;
                     BuyRecommendationThread.stockcount++;
                 }
@@ -53,6 +55,15 @@ public class BuyRecommendationThread extends ASXBuyRecommendation implements Run
 
         } catch (Exception e) {
         }
+
+    }
+
+     void start(int threadcount,int start, int end) {
+        this.start_count=start;
+        this.end_count=end;
+        this.thread_count=threadcount;
+        Thread t= new Thread(this);
+        t.start();
 
     }
 }
