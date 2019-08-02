@@ -12,12 +12,12 @@ public static int stockcount;
 public static ArrayList<ArrayList<String>> stock_details= new ArrayList<>();
     public static void main(String args[]) throws Exception
     {
-        int pages_per_thread=2;
+        int pages_per_thread=6;
 
 
-        BuyRecommendationThread []b1=new BuyRecommendationThread[10];
+        BuyRecommendationThread []b1=new BuyRecommendationThread[7];
 
-        for(int i=0;i<2;i++) {
+        for(int i=0;i<7;i++) {
           // b1[i] =new BuyRecommendationThread(i,(pages_per_thread*i)+1,pages_per_thread*(i+1));
 
             b1[i] =new BuyRecommendationThread();

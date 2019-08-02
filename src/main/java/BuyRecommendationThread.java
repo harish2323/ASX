@@ -18,7 +18,7 @@ public class BuyRecommendationThread extends ASXBuyRecommendation implements Run
             System.setProperty("webdriver.chrome.driver", "src/main/resources/chromedriver");
             ChromeOptions options = new ChromeOptions();
             options.addArguments("start-maximized");
-            // options.addArguments("headless");
+            options.addArguments("headless");
             WebDriver driver = new ChromeDriver(options);
             driver.manage().window().maximize();
 
@@ -33,7 +33,7 @@ public class BuyRecommendationThread extends ASXBuyRecommendation implements Run
 
             for (int k = this.start_count; k <= this.end_count; k++) {
                 driver.get("https://www.investing.com/stock-screener/?sp=country::25|sector::a|industry::a|equityType::a%3Ceq_market_cap;" + k);
-                Thread.sleep(10000);
+                Thread.sleep(4000);
 
                int size = driver.findElements(By.xpath("//*[@data-column-name='name_trans']")).size();
                 for (int i = 2; i < size; i++) {
