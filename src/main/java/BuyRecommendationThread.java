@@ -18,7 +18,7 @@ public class BuyRecommendationThread extends ASXBuyRecommendation implements Run
             System.setProperty("webdriver.chrome.driver", "src/main/resources/chromedriver");
             ChromeOptions options = new ChromeOptions();
             options.addArguments("start-maximized");
-            // options.addArguments("headless");
+             options.addArguments("headless");
             WebDriver driver = new ChromeDriver(options);
             driver.manage().window().maximize();
 
